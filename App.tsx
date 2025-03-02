@@ -3,11 +3,13 @@ import { View, Text , StyleSheet} from 'react-native';
 import LoginPage from './src/RecipientUI/LoginPage.tsx';
 import RegistrationPage1 from "./src/RecipientUI/RegistrationPage1"
 import RegistrationPage2 from "./src/RecipientUI/RegistrationPage2.tsx"
+import RegistrationPage3 from "./src/RecipientUI/RegistrationPage3.tsx"
+import RequestIC from "./src/RecipientUI/requestIC.tsx"
 
 const App = () => {
   return (
     <View style={styles.container}>
-       <RegistrationPage2/>
+       <RequestIC/>
        {/*
        <LoginPage/>
 

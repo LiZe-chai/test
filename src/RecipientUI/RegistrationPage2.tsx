@@ -3,6 +3,7 @@ import { View, Text, StyleSheet , Dimensions} from "react-native";
 import { TextInput, Button} from "react-native-paper";
 import Icon from "react-native-vector-icons/MaterialIcons";
 
+
 const { width, height } = Dimensions.get("window");
 
 const RegistrationPage2 = ({ navigation }) => {

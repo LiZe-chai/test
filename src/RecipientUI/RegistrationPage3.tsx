@@ -1,7 +1,10 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet } from "react-native";
-import { TextInput, Button} from "react-native-paper";
+import { View, Text, StyleSheet, Dimensions, Alert, TouchableWithoutFeedback  } from "react-native";
+import { TextInput, Button } from "react-native-paper";
+import { Dropdown } from "react-native-element-dropdown"; // 需要安装这个库
 import Icon from "react-native-vector-icons/MaterialIcons";
+
+const { width, height } = Dimensions.get("window");
 
 const registrationTypes = [
   { label: "Company Registration Number Old", value: "company_old" },
@@ -11,75 +14,87 @@ const registrationTypes = [
   { label: "LLP Registration Number", value: "llp" },
 ];
 
-const RegistrationPage2 = ({ navigation }) => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-  const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] = useState(false);
-  const [value, setValue] = useState(null);
+const RegistrationPage3 = ({ navigation }) => {
+  const [businessType, setBusinessType] = useState(null);
   const [isFocus, setIsFocus] = useState(false);
+  const [brn, setBrn] = useState(""); //Business registration type
+  const [address, setAddress] = useState("");
+  const [ic,setIC] = useState("");
+
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>App Names-Partner</Text>
       <Text style={styles.subtitle}>Enter your company profile</Text>
+
       <Dropdown
-              style={[styles.dropdown, isFocus && { borderColor: 'blue' }]}
-              placeholderStyle={styles.placeholderStyle}
-              selectedTextStyle={styles.selectedTextStyle}
-              inputSearchStyle={styles.inputSearchStyle}
-              iconStyle={styles.iconStyle}
-              data={registrationTypes}
-              search
-              maxHeight={300}
-              labelField="label"
-              valueField="value"
-              placeholder={!isFocus ? 'Select Your Registration type' : '...'}
-              searchPlaceholder="Search... "
-              value={value}
-              onFocus={() => setIsFocus(true)}
-              onBlur={() => setIsFocus(false)}
-              onChange={item => {
-                setValue(item.value);
-                setIsFocus(false);
-              }}
-            />
-      <TextInput
-        label="Business register number"
-        mode="outlined"
-        value={email}
-        onChangeText={setEmail}
-        style={styles.input}
+        style={[styles.dropdown, isFocus && { borderColor: "blue" }]}
+        placeholderStyle={styles.placeholderStyle}
+        selectedTextStyle={styles.selectedTextStyle}
+        inputSearchStyle={styles.inputSearchStyle}
+        iconStyle={styles.iconStyle}
+        data={registrationTypes}
+        search
+        maxHeight={300}
+        labelField="label"
+        valueField="value"
+        placeholder={!isFocus ? "Select Your Registration Type" : "..."}
+        searchPlaceholder="Search..."
+        value={businessType}
+        onFocus={() => setIsFocus(true)}
+        onBlur={() => setIsFocus(false)}
+        onChange={(item) => {
+          setBusinessType(item.value);
+          setIsFocus(false);
+        }}
       />
+
       <TextInput
-        label="Set Password"
+        label="Business Register Number"
         mode="outlined"
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry={!isPasswordVisible}
-        right={
-          <TextInput.Icon
-            icon={isPasswordVisible ? "eye-off" : "eye"}
-            onPress={() => setIsPasswordVisible(!isPasswordVisible)}
-          />}
-        style={styles.input}
-      />
-      <TextInput
-        label="Set Confirm Password"
-        mode="outlined"
-        value={confirmPassword}
-        onChangeText={setConfirmPassword}
-        secureTextEntry={!isConfirmPasswordVisible}
-        right={
-          <TextInput.Icon
-            icon={isConfirmPasswordVisible ? "eye-off" : "eye"}
-            onPress={() => setIsConfirmPasswordVisible(!isConfirmPasswordVisible)}
-          />}
+        value={brn}
+        onChangeText={setBrn}
         style={styles.input}
       />
 
-      <Button mode="contained" onPress={() => console.log("Next")} style={styles.NextButton}>
+      <TextInput
+        label="Registered Address"
+        mode="outlined"
+        value={address}
+        onChangeText={setAddress}
+        style={styles.input}
+      />
+      <TextInput
+          label={
+            businessType === "company_old" || businessType === "company_new"
+              ? "Director IC Number"
+              : businessType === "business_old" || businessType === "business_new"
+              ? "Owner IC Number"
+              : "Partner IC Number"
+          }
+          mode="outlined"
+          value={ic}
+          onChangeText={(text) => {
+              setIC(text.replace(/[^0-9]/g, ""));
+          }}
+          keyboardType="numeric"
+          maxLength={12}
+          style={[styles.input, !businessType && { backgroundColor: "#f0f0f0" }]}
+          disabled={!businessType}
+        />
+      <Text style={styles.helperText}>
+          {businessType === "company_old" || businessType === "company_new"
+            ? "One of the directors"
+            : businessType === "business_old" || businessType === "business_new"
+            ? ""
+            : "One of the partners"}
+      </Text>
+
+      <Button
+        mode="contained"
+        onPress={() => console.log("Next")}
+        style={styles.nextButton}
+      >
         Next
       </Button>
     </View>
@@ -93,31 +108,59 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     alignItems: "center",
     backgroundColor: "#f5f5f5",
-    paddingTop: 20,
+    paddingTop: height * 0.01,
   },
   title: {
-    fontSize: 30,
+    fontSize: width * 0.07,
     fontWeight: "bold",
-    marginBottom: 30,
+    marginBottom: height * 0.08,
     color: "#0a0a0a",
   },
   subtitle: {
-    fontSize: 14,
+    fontSize: width * 0.05,
     fontWeight: "bold",
     color: "#555",
-    marginBottom: 50,
+    width: "80%",
+    textAlign: "center",
+    marginBottom: height * 0.07,
   },
-
-  input: {
-    width: "70%",
-    maxWidth: 400,
+  dropdown: {
+    width: "80%",
+    height: "7%",
+    maxWidth: 450,
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 8,
+    padding: 10,
     backgroundColor: "white",
-    marginBottom: 25,
+    marginBottom: height * 0.04,
   },
-  NextButton: {
+  placeholderStyle: {
+    color: "#161717",
+    fontSize: width * 0.04,
+  },
+  selectedTextStyle: {
+    color: "#2645f0",
+    fontSize: width * 0.04,
+  },
+  input: {
+    width: "80%",
+    maxWidth: 450,
+    backgroundColor: "white",
+    marginBottom: height * 0.02,
+  },
+  nextButton: {
     width: "50%",
     maxWidth: 400,
     marginTop: 40,
   },
-
+  helperText: {
+    alignSelf: "flex-start",
+    marginLeft: "10%",
+    color: "#d18100",
+    fontSize: width*0.04,
+    marginTop: -10,
+  },
 });
+
+export default RegistrationPage3;
