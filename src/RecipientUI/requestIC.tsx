@@ -50,7 +50,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "#f5f5f5",
     paddingTop: 20,
-    paddingBottom: 40, // 防止按钮被挡住
+    paddingBottom: 40,
   },
   title: {
     fontSize: 24,
