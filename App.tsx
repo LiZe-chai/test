@@ -15,7 +15,6 @@ const App = () => {
         <ProfilePage/>
        {/*
        <LoginPage/>
-
        <RegistrationPage2/>
        */}
     </View>
